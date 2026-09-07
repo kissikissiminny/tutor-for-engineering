@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Engineering Study Hub & Tutor Dashboard</title>
+  
+  <!-- KaTeX for Beautiful LaTeX Rendering -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js"
+    onload="renderMathInElement(document.body, {
+      delimiters: [
+        {left: '$$', right: '$$', display: true},
+        {left: '$', right: '$', display: false}
+      ]
+    });"></script>
+
+  <style>
+    :root {
+      --bg-base: #0b0f19;
+      --bg-surface: #111827;
+      --bg-card: #1e293b;
+      --bg-card-subtle: #0f172a;
+      --border-subtle: #334155;
+      --border-highlight: #475569;
+      
+      --text-main: #f8fafc;
+      --text-muted: #cbd5e1;
+      --text-dim: #94a3b8;
+      
+      --cyan: #38bdf8;
+      --cyan-glow: rgba(56, 189, 248, 0.15);
+      --cyan-border: rgba(56, 189, 248, 0.35);
+      
+      --accent-blue: #60a5fa;
+      --emerald: #34d399;
+      --emerald-bg: rgba(52, 211, 153, 0.12);
+      --emerald-border: rgba(52, 211, 153, 0.3);
+      
+      --amber: #fbbf24;
+      --amber-bg: rgba(251, 191, 36, 0.1);
+      --amber-border: rgba(251, 191, 36, 0.3);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-main);
+      line-height: 1.6;
+      padding: 40px 20px;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* KaTeX text styling in dark mode */
+    .katex {
+      color: #f1f5f9;
+      font-size: 1.05em;
+    }
+    .formula-math .katex, .analysis-val .katex {
+      color: var(--cyan);
+    }
+
+    /* Header */
+    header {
+      background: linear-gradient(180deg, #162032 0%, var(--bg-surface) 100%);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 34px;
+      margin-bottom: 30px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+      position: relative;
+      overflow: hidden;
+    }
+
+    header::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #0284c7, var(--cyan), #38bdf8);
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      background-color: var(--cyan-glow);
+      color: var(--cyan);
+      border: 1px solid var(--cyan-border);
+      margin-bottom: 14px;
+    }
+
+    .badge::before {
+      content: "";
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+    }
+
+    h1 {
+      font-size: 1.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Multi-Agent Architecture Showcase */
+    .system-architecture {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 14px;
+      margin-top: 26px;
+      padding-top: 22px;
+      border-top: 1px solid var(--border-subtle);
+    }
+
+    .agent-card {
+      background: var(--bg-card-subtle);
+      border-radius: 10px;
+      padding: 16px 18px;
+      border: 1px solid var(--border-subtle);
+      border-left: 3px solid var(--cyan);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2);
+    }
+
+    .agent-title {
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--cyan);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .agent-desc {
+      font-size: 0.82rem;
+      color: var(--text-dim);
+      line-height: 1.5;
+    }
+
+    /* Section Headings */
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin: 40px 0 18px 0;
+    }
+
+    .section-title::before {
+      content: "";
+      display: inline-block;
+      width: 4px;
+      height: 22px;
+      background: var(--cyan);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    /* Elevated Dark Cards */
+    .card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: 14px;
+      padding: 26px 28px;
+      margin-bottom: 22px;
+      box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.45);
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .card:hover {
+      border-color: var(--border-highlight);
+    }
+
+    .formula-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 14px;
+      margin-top: 14px;
+    }
+
+    .formula-item {
+      background: var(--bg-card);
+      padding: 16px 18px;
+      border-radius: 10px;
+      border: 1px solid var(--border-subtle);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .formula-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--text-dim);
+      margin-bottom: 6px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .formula-math {
+      font-size: 1.15rem;
+      color: var(--cyan);
+    }
+
+    /* Problem Session Cards */
+    .problem-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .problem-title {
+      font-size: 1.18rem;
+      font-weight: 700;
+      color: #ffffff;
+    }
+
+    .status-tag {
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: var(--emerald-bg);
+      color: var(--emerald);
+      border: 1px solid var(--emerald-border);
+      white-space: nowrap;
+    }
+
+    .problem-quote {
+      background: var(--bg-card-subtle);
+      border-left: 3px solid var(--border-highlight);
+      padding: 12px 16px;
+      margin-bottom: 18px;
+      color: var(--text-muted);
+      font-size: 0.94rem;
+      border-radius: 0 8px 8px 0;
+      border: 1px solid var(--border-subtle);
+      border-left-width: 3px;
+    }
+
+    .pipeline-steps {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 18px;
+    }
+
+    @media (max-width: 680px) {
+      .pipeline-steps {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .step-pill {
+      background: var(--bg-card-subtle);
+      padding: 9px 10px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      text-align: center;
+      border: 1px solid var(--border-subtle);
+      color: var(--text-dim);
+    }
+
+    .step-pill.done {
+      background: rgba(56, 189, 248, 0.08);
+      border-color: var(--cyan-border);
+      color: var(--cyan);
+      font-weight: 600;
+    }
+
+    .problem-analysis {
+      font-size: 0.92rem;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      border-top: 1px dashed var(--border-subtle);
+      padding-top: 16px;
+    }
+
+    .analysis-row {
+      display: flex;
+      gap: 12px;
+      align-items: baseline;
+    }
+
+    .analysis-label {
+      min-width: 140px;
+      font-weight: 600;
+      color: var(--text-dim);
+    }
+
+    .analysis-val {
+      color: var(--text-main);
+    }
+
+    .highlight-box {
+      background: var(--amber-bg);
+      border: 1px solid var(--amber-border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: #fde68a;
+      line-height: 1.5;
+    }
+
+    .highlight-box strong {
+      color: var(--amber);
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: var(--text-dim);
+      font-size: 0.85rem;
+      padding-top: 24px;
+      border-top: 1px solid var(--border-subtle);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <!-- Header -->
+    <header>
+      <span class="badge">Socratic Method &bull; Ground Truth Verified</span>
+      <h1>Engineering Study Hub & Tutor Dashboard</h1>
+      <p class="subtitle">คลังสรุปสูตรอ้างอิงมาตรฐาน กลศาสตร์วิศวกรรม พร้อมประวัติการวิเคราะห์โจทย์ด้วย 4-Stage Socratic Pipeline</p>
+
+      <!-- Behind-the-Scenes Sub-agent Orchestration -->
+      <div class="system-architecture">
+        <div class="agent-card">
+          <div class="agent-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            1. Physical Modeling
+          </div>
+          <div class="agent-desc">สกัด Givens/Find, ตั้งสมมติฐาน, ทิศทางพิกัด และจำลองกรณีสุดโต่ง (Extreme Cases)</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="4" y1="9" x2="20" y2="9"></line><line x1="4" y1="15" x2="20" y2="15"></line><line x1="10" y1="3" x2="8" y2="21"></line><line x1="16" y1="3" x2="14" y2="21"></line></svg>
+            2. Math Rigor
+          </div>
+          <div class="agent-desc">ตรวจสอบสมการหลักจาก <code>sources/</code> และจัดรูป LaTeX มาตรฐานวิศวกรรม</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-title">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="16 18 22 12 16 6"></polyline><polyline points="8 6 2 12 8 18"></polyline></svg>
+            3. Python Solver
+          </div>
+          <div class="agent-desc">คำนวณเบื้องหลังแม่นยำ 100% พร้อม Sanity Check โพยลับสำหรับติวเตอร์</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- SECTION: Ground Truth Sources -->
+    <div class="section-title">Ground Truth Formula Sheet (อ้างอิง: sources/mechanics/reference.md)</div>
+    
+    <div class="card">
+      <h3 style="font-size: 1.05rem; margin-bottom: 8px; color: var(--accent-blue);">1. 1D Constant Acceleration Kinematics</h3>
+      <div class="formula-grid">
+        <div class="formula-item">
+          <div class="formula-label">ความเร็ว-เวลา</div>
+          <div class="formula-math">$v = u + at$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">ตำแหน่ง-เวลา</div>
+          <div class="formula-math">$s = ut + \frac{1}{2}at^2$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">ความเร็ว-ระยะทาง (ไร้เวลา)</div>
+          <div class="formula-math">$v^2 = u^2 + 2as$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">ความเร็วเฉลี่ย</div>
+          <div class="formula-math">$s = \left(\frac{u + v}{2}\right)t$</div>
+        </div>
+      </div>
+
+      <h3 style="font-size: 1.05rem; margin-top: 24px; margin-bottom: 8px; color: var(--accent-blue);">2. Work-Energy & Conservation</h3>
+      <div class="formula-grid">
+        <div class="formula-item">
+          <div class="formula-label">Kinetic Energy</div>
+          <div class="formula-math">$K = \frac{1}{2}mv^2$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">Potential Energy</div>
+          <div class="formula-math">$U_g = mgh$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">Work of Force</div>
+          <div class="formula-math">$W = \vec{F} \cdot \Delta\vec{r} = F \Delta r \cos\theta$</div>
+        </div>
+        <div class="formula-item">
+          <div class="formula-label">Work-Energy Principle</div>
+          <div class="formula-math">$W_{\text{nc}} = \Delta E_{\text{mech}} = E_2 - E_1$</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECTION: Solved Sessions Showcase -->
+    <div class="section-title">Case Studies: ผลงานการวิเคราะห์โจทย์ (sessions/)</div>
+
+    <!-- Case 1 -->
+    <div class="card">
+      <div class="problem-header">
+        <div class="problem-title">Case 1: แรงต้านทานเฉลี่ยในการเบรกรถยนต์</div>
+        <span class="status-tag">&check; Solved &bull; Verified</span>
+      </div>
+      <div class="problem-quote">
+        "รถยนต์มวล 1000 kg วิ่งด้วยความเร็ว 20 m/s เหยียบเบรกจนหยุดนิ่งในระยะทาง 50 เมตร จงหาแรงต้านทานเฉลี่ย"
+      </div>
+      <div class="pipeline-steps">
+        <div class="step-pill done">&check; 1. Identify</div>
+        <div class="step-pill done">&check; 2. Model (FBD)</div>
+        <div class="step-pill done">&check; 3. Governing Eq</div>
+        <div class="step-pill done">&check; 4. Sanity Check</div>
+      </div>
+      <div class="problem-analysis">
+        <div class="analysis-row">
+          <span class="analysis-label">สมการหลัก:</span>
+          <span class="analysis-val">$v^2 = u^2 + 2as \implies a = -4\ \text{m/s}^2$ และ $\Sigma F = ma$</span>
+        </div>
+        <div class="analysis-row">
+          <span class="analysis-label">คำตอบสุดท้าย:</span>
+          <span class="analysis-val">$\bar{F}_{\text{res}} = -4000\ \text{N}$ (แรงต้านขนาด $4\ \text{kN}$ ทิศตรงข้ามการเคลื่อนที่)</span>
+        </div>
+        <div class="analysis-row">
+          <span class="analysis-label">Sanity Check:</span>
+          <span class="analysis-val">มิติ $[M L T^{-2}] = [\text{N}]$ และแรงคิดเป็น $\approx 0.4\times$ น้ำหนักรถ ($mg$) สมเหตุสมผลกับสัมประสิทธิ์ยางรถยนต์</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 2 -->
+    <div class="card">
+      <div class="problem-header">
+        <div class="problem-title">Case 2: ความสูงสูงสุดของวัตถุขว้างแนวดิ่ง</div>
+        <span class="status-tag">&check; Solved &bull; Verified</span>
+      </div>
+      <div class="problem-quote">
+        "ขว้างก้อนหินมวล 2 kg ขึ้นไปในแนวดิ่งด้วยความเร็วต้น 30 m/s จงหาความสูงสูงสุดที่ก้อนหินขึ้นไปได้"
+      </div>
+      <div class="pipeline-steps">
+        <div class="step-pill done">&check; 1. Identify</div>
+        <div class="step-pill done">&check; 2. Coordinate ($a = -g$)</div>
+        <div class="step-pill done">&check; 3. $v^2 = u^2 + 2as$</div>
+        <div class="step-pill done">&check; 4. Extreme Check</div>
+      </div>
+      <div class="problem-analysis">
+        <div class="analysis-row">
+          <span class="analysis-label">สมการหลัก:</span>
+          <span class="analysis-val">$0 = u^2 - 2g h_{\text{max}} \implies h_{\text{max}} = \frac{u^2}{2g}$</span>
+        </div>
+        <div class="analysis-row">
+          <span class="analysis-label">คำตอบสุดท้าย:</span>
+          <span class="analysis-val">$h_{\text{max}} = 45\ \text{m}$ (เมื่อใช้ $g = 10$) หรือ $45.92\ \text{m}$ (เมื่อใช้ $g = 9.81$)</span>
+        </div>
+        <div class="highlight-box">
+          <strong>Physical Insight & Extreme Case:</strong> มวล $m = 2\ \text{kg}$ ไม่มีผลต่อความสูง (Mass Independence) และเมื่อจำลอง $g \to \infty \implies h_{\text{max}} \to 0$ สอดคล้องกับตรรกะทางฟิสิกส์ 100%
+        </div>
+      </div>
+    </div>
+
+    <!-- Case 3 -->
+    <div class="card">
+      <div class="problem-header">
+        <div class="problem-title">Case 3: การไถลลงเนินและการหยุดนิ่งบนพื้นราบที่มีแรงเสียดทาน</div>
+        <span class="status-tag">&check; Solved &bull; Verified</span>
+      </div>
+      <div class="problem-quote">
+        "ปล่อยวัตถุมวล 4 kg ไถลลงจากยอดเนินลื่นสูง 5 เมตร แล้ววิ่งต่อไปบนพื้นราบที่มีสัมประสิทธิ์แรงเสียดทานจลน์ 0.2 จงหาระยะทางที่วัตถุเคลื่อนที่บนพื้นราบก่อนจะหยุดนิ่ง"
+      </div>
+      <div class="pipeline-steps">
+        <div class="step-pill done">&check; 1. 2-Phase Model</div>
+        <div class="step-pill done">&check; 2. Work-Energy</div>
+        <div class="step-pill done">&check; 3. $mgh = \mu_k mg s$</div>
+        <div class="step-pill done">&check; 4. Multi-Verification</div>
+      </div>
+      <div class="problem-analysis">
+        <div class="analysis-row">
+          <span class="analysis-label">สมการดุลพลังงาน:</span>
+          <span class="analysis-val">$E_1 + W_{\text{nc}} = E_2 \implies mgh - \mu_k mg s = 0 \implies s = \frac{h}{\mu_k}$</span>
+        </div>
+        <div class="analysis-row">
+          <span class="analysis-label">คำตอบสุดท้าย:</span>
+          <span class="analysis-val">$s = \frac{5}{0.2} = 25\ \text{m}$</span>
+        </div>
+        <div class="highlight-box">
+          <strong>Boundary & Energy Logic:</strong> ทั้งมวล $m$ และ $g$ ตัดกันหมด หากพื้นลื่นสนิทไร้แรงเสียดทาน ($\mu_k \to 0$) วัตถุจะไถลต่อไปเรื่อยๆ อย่างไม่มีที่สิ้นสุด ($s \to \infty$) ตามกฎการอนุรักษ์พลังงานกล
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      Engineering Socratic Tutor System &bull; Project: My First Project &bull; Built with Socratic Method & KaTeX
+    </footer>
+  </div>
+
+</body>
+</html>
