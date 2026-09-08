@@ -467,7 +467,7 @@
         <div class="avatar">⚙️</div>
         <div class="tutor-info">
           <h2>Socratic Tutor <span class="online-indicator"></span></h2>
-          <p>ENGINEERING &bull; GROUND TRUTH <span class="model-badge" id="currentModelBadge">Flash</span></p>
+          <p>ENGINEERING &bull; GROUND TRUTH <span class="model-badge" id="currentModelBadge">3.8/3.6 Flash</span></p>
         </div>
       </div>
       <button class="settings-btn" id="openSettingsBtn" title="API Settings">
@@ -526,9 +526,9 @@
         
         <label for="modelSelect">เลือกโมเดล (Gemini Model Selection)</label>
         <select id="modelSelect">
-          <option value="gemini-2.5-flash">Gemini 3.8 Flash (เร็ว คล่องตัว แนะนำ)</option>
-          <option value="gemini-2.5-pro">Gemini 3.1 Pro (คิดลึก สำหรับโจทย์ยาก)</option>
+          <option value="gemini-3.6-flash" selected>Gemini 3.8 / 3.6 Flash - แนะนำล่าสุด</option>
           <option value="gemini-2.0-flash">Gemini 2.0 Flash</option>
+          <option value="gemini-1.5-pro">Gemini Pro</option>
         </select>
 
         <div class="modal-actions">
@@ -598,18 +598,20 @@
 
     // Load saved settings
     let apiKey = localStorage.getItem('gemini_api_key') || '';
-    let selectedModel = localStorage.getItem('gemini_model') || 'gemini-2.5-flash';
+    let selectedModel = localStorage.getItem('gemini_model') || 'gemini-3.6-flash';
     apiKeyInput.value = apiKey;
     modelSelect.value = selectedModel;
     updateModelBadge(selectedModel);
 
     function updateModelBadge(modelId) {
-      if (modelId.includes('pro')) {
-        currentModelBadge.textContent = '3.1 Pro';
+      if (modelId.includes('3.6') || modelId.includes('3.8')) {
+        currentModelBadge.textContent = '3.8/3.6 Flash';
+      } else if (modelId.includes('pro')) {
+        currentModelBadge.textContent = 'Gemini Pro';
       } else if (modelId.includes('2.0')) {
         currentModelBadge.textContent = '2.0 Flash';
       } else {
-        currentModelBadge.textContent = '3.8 Flash';
+        currentModelBadge.textContent = modelId;
       }
     }
 
